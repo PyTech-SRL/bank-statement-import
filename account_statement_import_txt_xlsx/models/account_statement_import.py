@@ -4,6 +4,7 @@
 import logging
 
 from odoo import fields, models
+from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
@@ -32,6 +33,8 @@ class AccountStatementImport(models.TransientModel):
                 return Parser.parse(
                     data_file, self.sheet_mapping_id, self.statement_filename
                 )
+            except UserError as err:
+                raise err
             except BaseException:
                 if self.env.context.get("account_statement_import_txt_xlsx_test"):
                     raise
